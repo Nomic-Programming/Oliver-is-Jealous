@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    // Global variable to hold the GUI reference
+    let gui;
+
     // Helper function to get the state node
     function getStateNode() {
         return Object.values(document.querySelector("#app > div > div"))[1].children[0]._owner.stateNode;
@@ -9,7 +12,7 @@
     // Function to create the GUI
     function createGUI(isDashboard) {
         // Create GUI
-        const gui = document.createElement("div");
+        gui = document.createElement("div");
         gui.style = "position:fixed; top:20px; left:20px; padding:15px; background:red; color:white; border-radius:8px; z-index:9999; display:block; width: 300px;";
 
         // Create top bar for dragging
@@ -80,6 +83,7 @@
             input.type = "text";
             input.placeholder = "Enter Blook (case sensitive)";
             input.style.width = "100%";
+            input.style.height = "40px"; // Match button height
             input.style.boxSizing = "border-box";
             input.style.padding = "8px";
             input.style.marginBottom = "10px";
@@ -211,9 +215,11 @@
     // Toggle GUI visibility with Control + E (or Command + E for Mac)
     document.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === "e") {
-            const gui = document.querySelector('div[style*="position:fixed;"]');
             if (gui) {
                 gui.style.display = gui.style.display === "none" ? "block" : "none";
+            } else {
+                // Recreate the GUI if it's not there
+                createGUI(isDashboard);
             }
         }
     });
