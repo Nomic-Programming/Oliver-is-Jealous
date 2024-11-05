@@ -1,8 +1,9 @@
 (function () {
     'use strict';
 
-    // Global variable to hold the GUI reference
+    // Global variables to hold GUI and connected box references
     let gui;
+    let connectedBox;
 
     // Helper function to get the state node
     function getStateNode() {
@@ -39,7 +40,6 @@
             document.onmousemove = null;
         };
 
-        // Append the top bar to the GUI
         gui.appendChild(topBar);
 
         // Button styling function
@@ -65,7 +65,6 @@
             return button;
         }
 
-        // Append buttons based on the page
         gui.appendChild(createButton(isDashboard ? "Use All Blooks (Be Careful)" : "Use Any Blook", useAnyBlook));
 
         if (!isDashboard) {
@@ -83,7 +82,7 @@
             input.type = "text";
             input.placeholder = "Enter Blook (case sensitive)";
             input.style.width = "100%";
-            input.style.height = "40px"; // Match button height
+            input.style.height = "40px";
             input.style.boxSizing = "border-box";
             input.style.padding = "8px";
             input.style.marginBottom = "10px";
@@ -103,14 +102,13 @@
 
     // Function to create the connected box
     function createConnectedBox() {
-        const connectedBox = document.createElement("div");
+        connectedBox = document.createElement("div");
         connectedBox.style = "position:fixed; top:20px; left:20px; padding:15px; background:red; color:white; border-radius:8px; z-index:9999; display:block; width: 300px;";
 
         const topBar = document.createElement("div");
         topBar.innerText = "Connected";
         topBar.style = "cursor: move; background: #cc0000; padding: 10px; text-align: center; border-radius: 5px 5px 0 0; margin-bottom: 10px; user-select: none;";
 
-        // Draggable functionality for the connected box
         let isDragging = false, offsetX, offsetY;
         topBar.onmousedown = (e) => {
             isDragging = true;
@@ -148,18 +146,15 @@
         document.body.appendChild(connectedBox);
     }
 
-    // Check if on dashboard.blooket.com
     const isDashboard = window.location.hostname === "dashboard.blooket.com";
     const isPlay = window.location.hostname === "play.blooket.com";
 
-    // Execute based on the page type
     if (isPlay) {
-        createConnectedBox(); // Only create connected box if on play page
+        createConnectedBox();
     } else {
-        createGUI(isDashboard); // Create GUI for other pages
+        createGUI(isDashboard);
     }
 
-    // Function 1: Use Any Blook
     function useAnyBlook() {
         const stateNode = getStateNode();
         const lobby = window.location.pathname.startsWith("/play/lobby");
@@ -193,7 +188,6 @@
         }
     }
 
-    // Function 2: Change Blook Ingame
     function changeBlookIngame(blook) {
         const stateNode = getStateNode();
         const { props } = stateNode;
@@ -212,14 +206,14 @@
         }
     }
 
-    // Toggle GUI visibility with Control + E (or Command + E for Mac)
+    // Toggle visibility with Command+E (Mac) or Control+E
     document.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === "e") {
             if (gui) {
                 gui.style.display = gui.style.display === "none" ? "block" : "none";
-            } else {
-                // Recreate the GUI if it's not there
-                createGUI(isDashboard);
+            }
+            if (connectedBox) {
+                connectedBox.style.display = connectedBox.style.display === "none" ? "block" : "none";
             }
         }
     });
