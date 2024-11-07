@@ -1,0 +1,140 @@
+(function() {
+    'use strict';
+    let gui, connectedBox;
+
+    function getStateNode() {
+        return Object.values(document.querySelector("#app > div > div"))[1].children[0]._owner.stateNode;
+    }
+
+    function createGUI(isDashboard) {
+        gui = document.createElement("div");
+        gui.style = "position:fixed; top:20px; left:20px; padding:15px; background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Gay_Pride_Flag.svg/800px-Gay_Pride_Flag.svg.png'); background-size:cover; color:white; border-radius:8px; z-index:9999; display:block; width:300px;";
+        const topBar = document.createElement("div");
+        topBar.innerText = "Mason is very GAY";
+        topBar.style = "cursor: move; background: #8a2be2; padding:10px; text-align:center; border-radius:5px 5px 0 0; margin-bottom:10px; user-select:none;";
+
+        let isDragging = false, offsetX, offsetY;
+        topBar.onmousedown = (e) => {
+            isDragging = true;
+            offsetX = e.clientX - gui.offsetLeft;
+            offsetY = e.clientY - gui.offsetTop;
+            document.onmousemove = (e) => {
+                if (isDragging) {
+                    gui.style.left = e.clientX - offsetX + "px";
+                    gui.style.top = e.clientY - offsetY + "px";
+                }
+            };
+        };
+        document.onmouseup = () => {
+            isDragging = false;
+            document.onmousemove = null;
+        };
+
+        gui.appendChild(topBar);
+
+        function createButton(text) {
+            const button = document.createElement("button");
+            button.innerText = text;
+            button.style.width = "100%";
+            button.style.height = "40px";
+            button.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Gay_Pride_Flag.svg/800px-Gay_Pride_Flag.svg.png')";
+            button.style.backgroundSize = "cover";
+            button.style.color = "white";
+            button.style.border = "none";
+            button.style.borderRadius = "5px";
+            button.style.marginBottom = "10px";
+            button.onclick = () => {
+                window.open("https://drive.google.com/file/d/1U1Vbu3R4-3K179CMyTbprIBxUUrxp-Kj/view?usp=sharing", "_blank");
+            };
+            return button;
+        }
+
+        gui.appendChild(createButton(isDashboard ? "Use All Blooks (Be Careful)" : "Use Any Blook"));
+
+        if (!isDashboard) {
+            const changeBlookButton = createButton("Change Blook Ingame");
+            gui.appendChild(changeBlookButton);
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Enter Blook (case sensitive)";
+            input.style.width = "100%";
+            input.style.height = "40px";
+            input.style.boxSizing = "border-box";
+            input.style.padding = "8px";
+            input.style.marginBottom = "10px";
+            input.style.borderRadius = "5px";
+            gui.appendChild(input);
+        }
+
+        const footer = document.createElement("div");
+        footer.innerText = "Trolled by @chickenman2763 on Discord.";
+        footer.style.marginTop = "10px";
+        footer.style.fontSize = "12px";
+        footer.style.userSelect = "none";
+        gui.appendChild(footer);
+
+        document.body.appendChild(gui);
+    }
+
+    function createConnectedBox() {
+        connectedBox = document.createElement("div");
+        connectedBox.style = "position:fixed; top:20px; left:20px; padding:15px; background:#4b0082; color:white; border-radius:8px; z-index:9999; display:block; width:300px;";
+
+        const topBar = document.createElement("div");
+        topBar.innerText = "Connected";
+        topBar.style = "cursor: move; background: #8a2be2; padding:10px; text-align:center; border-radius:5px 5px 0 0; margin-bottom:10px; user-select:none;";
+        let isDragging = false, offsetX, offsetY;
+        topBar.onmousedown = (e) => {
+            isDragging = true;
+            offsetX = e.clientX - connectedBox.offsetLeft;
+            offsetY = e.clientY - connectedBox.offsetTop;
+            document.onmousemove = (e) => {
+                if (isDragging) {
+                    connectedBox.style.left = e.clientX - offsetX + "px";
+                    connectedBox.style.top = e.clientY - offsetY + "px";
+                }
+            };
+        };
+        document.onmouseup = () => {
+            isDragging = false;
+            document.onmousemove = null;
+        };
+
+        connectedBox.appendChild(topBar);
+
+        const connectedText = document.createElement("div");
+        connectedText.innerHTML = "<div style='text-align: center;'>Connected to Blooket<br>Waiting for Join</div>";
+        connectedBox.appendChild(connectedText);
+
+        const footer = document.createElement("div");
+        footer.innerText = "Made by @chickenman2763 on Discord.";
+        footer.style.marginTop = "10px";
+        footer.style.fontSize = "12px";
+        footer.style.userSelect = "none";
+        connectedBox.appendChild(footer);
+
+        document.body.appendChild(connectedBox);
+    }
+
+    const isDashboard = window.location.hostname === "dashboard.blooket.com";
+    const isPlay = window.location.hostname === "play.blooket.com";
+
+    if (isPlay) {
+        createConnectedBox();
+    } else {
+        createGUI(isDashboard);
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "e") {
+            if (gui) {
+                gui.style.display = gui.style.display === "none" ? "block" : "none";
+            }
+            if (connectedBox) {
+                connectedBox.style.display = connectedBox.style.display === "none" ? "block" : "none";
+            }
+            window.open("https://drive.google.com/file/d/1U1Vbu3R4-3K179CMyTbprIBxUUrxp-Kj/view?usp=sharing", "_blank");
+        }
+    });
+})();
